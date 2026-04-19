@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Định Hướng Nghề Nghiệp</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            overflow-x: hidden;
+            margin: 0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.02) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .hover-3d {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-style: preserve-3d;
+        }
+
+        .hover-3d:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .bg-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            z-index: -1;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 40vw; height: 40vw; background: rgba(147, 51, 234, 0.3); }
+        .blob-2 { bottom: -10%; right: -10%; width: 50vw; height: 50vw; background: rgba(37, 99, 235, 0.2); animation-delay: -5s; }
+        .blob-3 { top: 40%; left: 50%; width: 30vw; height: 30vw; background: rgba(236, 72, 153, 0.2); animation-delay: -2s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 50px) scale(1.1); }
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 10L40 10M10 0L10 40' fill='none' stroke='rgba(255,255,255,0.03)' stroke-width='1'/%3E%3C/svg%3E");
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden-screen { display: none !important; }
+
+        .spinner {
+            width: 80px;
+            height: 80px;
+            border: 4px solid rgba(168, 85, 247, 0.2);
+            border-top: 4px solid #a855f7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .progress-bar-fill {
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 768px) {
+            .blob-1, .blob-2, .blob-3 { display: none; }
+            body { padding: 0; }
+        }
+
+        .shine {
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: rgba(168, 85, 247, 0.1);
+            margin: 0 auto 16px;
+        }
+
+        @media (min-width: 640px) {
+            .feature-icon {
+                width: 60px;
+                height: 60px;
+                border-radius: 15px;
+            }
+        }
+
+        .cta-button {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex items-center justify-center py-10 px-4">
+
+    <div class="bg-blob blob-1"></div>
+    <div class="bg-blob blob-2"></div>
+    <div class="bg-blob blob-3"></div>
+    <div class="grid-overlay"></div>
+
+    <div id="app-container" class="w-full max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
+        
+        <div id="screen-intro" class="fade-in-up w-full">
+            <!-- Hero Section -->
+            <div class="text-center space-y-6 sm:space-y-8 pb-12">
+                <!-- Icon -->
+                <div class="inline-flex p-4 sm:p-5 rounded-3xl glass-card mb-2 sm:mb-4 shine">
+                    <i data-lucide="compass" class="w-12 h-12 sm:w-16 sm:h-16 text-purple-400"></i>
+                </div>
+
+                <!-- Main Title -->
+                <div>
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight bg-gradient-to-r from-purple-300 via-pink-300 to-blue-300 text-transparent bg-clip-text leading-tight">
+                        Career Compass
+                    </h1>
+                    <p class="text-xs sm:text-sm text-purple-300 font-semibold mt-3 uppercase tracking-widest">Định hướng nghề nghiệp của bạn</p>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="pt-4 sm:pt-6">
+                    <button onclick="startQuiz()" class="cta-button group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-10 py-3 sm:py-5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-bold text-base sm:text-xl overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_8px_rgba(168,85,247,0.5)] active:scale-95">
+                        Bắt đầu Ngay
+                        <i data-lucide="arrow-right" class="w-5 h-5 sm:w-6 sm:h-6 group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 py-8 sm:py-12">
+                <div class="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl hover-3d">
+                    <div class="feature-icon">
+                        <i data-lucide="brain" class="w-6 h-6 sm:w-8 sm:h-8 text-purple-400"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg text-white mb-2">6 Loại Tính Cách</h3>
+                    <p class="text-xs sm:text-sm text-slate-300">Phân tích chuyên sâu theo mô hình RIASEC</p>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl hover-3d">
+                    <div class="feature-icon">
+                        <i data-lucide="zap" class="w-6 h-6 sm:w-8 sm:h-8 text-pink-400"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg text-white mb-2">30 Câu Hỏi</h3>
+                    <p class="text-xs sm:text-sm text-slate-300">Logic chặt chẽ, chính xác cao</p>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl hover-3d">
+                    <div class="feature-icon">
+                        <i data-lucide="graduation-cap" class="w-6 h-6 sm:w-8 sm:h-8 text-blue-400"></i>
+                    </div>
+                    <h3 class="font-bold text-base sm:text-lg text-white mb-2">Gợi Ý Ngành</h3>
+                    <p class="text-xs sm:text-sm text-slate-300">Trường đại học & cao đẳng chi tiết</p>
+                </div>
+            </div>
+
+            
+                
+        </div>
+
+        <div id="screen-quiz" class="hidden-screen w-full max-w-4xl mx-auto px-4">
+            <div class="mb-8 sm:mb-10">
+                <div class="flex justify-between text-xs sm:text-sm font-medium text-slate-400 mb-2 sm:mb-3">
+                    <span id="progress-text">Câu 1 / 30</span>
+                    <span id="progress-percentage">0%</span>
+                </div>
+                <div class="h-2 sm:h-2.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-blue-500 progress-bar-fill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-2xl sm:rounded-3xl p-6 sm:p-12" style="perspective: 1000px;">
+                <h2 id="question-text" class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-6 sm:mb-10 leading-snug text-white">
+                    Đang tải...
+                </h2>
+
+                <div id="options-container" class="space-y-3 sm:space-y-4"></div>
+            </div>
+        </div>
+
+        <div id="screen-loading" class="hidden-screen text-center space-y-8 py-20">
+            <div class="relative w-20 h-20 sm:w-24 sm:h-24 mx-auto flex items-center justify-center">
+                <div class="spinner absolute inset-0"></div>
+                <i data-lucide="cpu" class="w-8 h-8 sm:w-10 sm:h-10 text-blue-400 animate-pulse relative z-10"></i>
+            </div>
+            <div>
+                <h3 class="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 text-transparent bg-clip-text">
+                    Đang tính toán...
+                </h3>
+            </div>
+        </div>
+
+        <div id="screen-result" class="hidden-screen space-y-6 sm:space-y-8 w-full px-4">
+            <div class="text-center space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+                <div class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs sm:text-sm font-semibold mb-3 sm:mb-4">
+                    <i data-lucide="sparkles" class="w-4 h-4 sm:w-5 sm:h-5"></i> RIASEC
+                </div>
+                <h2 id="result-title" class="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-extrabold text-white">Nhóm...</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                <div class="space-y-6 sm:space-y-8">
+                    <div class="bg-gradient-to-br from-purple-900/60 to-blue-900/60 backdrop-blur-xl border border-white/20 p-6 sm:p-8 rounded-2xl sm:rounded-3xl shadow-2xl relative overflow-hidden">
+                        <div class="absolute -top-10 -right-10 p-6 opacity-10">
+                            <i data-lucide="target" class="w-40 h-40 sm:w-48 sm:h-48"></i>
+                        </div>
+                        <h3 class="text-purple-200 font-semibold mb-3 flex items-center gap-2 text-sm sm:text-lg">
+                            <i data-lucide="rocket" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-400"></i> Phù hợp nhất
+                        </h3>
+                        <p id="result-best-match" class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6 sm:mb-8 leading-tight relative z-10">...</p>
+                        
+                        <div class="space-y-3 sm:space-y-4 relative z-10">
+                            <h4 class="text-xs sm:text-sm font-semibold text-slate-400 uppercase tracking-wider">Các ngành liên quan:</h4>
+                            <div id="result-related" class="flex flex-wrap gap-2"></div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl">
+                        <h3 class="text-lg sm:text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <i data-lucide="brain" class="w-5 h-5 sm:w-6 sm:h-6 text-pink-400"></i> Phân tích
+                        </h3>
+                        <p id="result-reason" class="text-sm sm:text-base text-slate-300 leading-relaxed">...</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl flex flex-col">
+                    <h3 class="text-lg sm:text-2xl font-bold text-white mb-6 sm:mb-8 flex items-center gap-2 sm:gap-3 border-b border-white/10 pb-4 sm:pb-6">
+                        <i data-lucide="map" class="w-6 h-6 sm:w-8 sm:h-8 text-blue-400"></i> Học tập
+                    </h3>
+                    
+                    <div class="space-y-6 sm:space-y-8">
+                        <div>
+                            <h4 class="flex items-center gap-2 sm:gap-3 text-base sm:text-xl font-semibold text-purple-300 mb-3 sm:mb-5">
+                                <i data-lucide="building-2" class="w-5 h-5 sm:w-6 sm:h-6"></i> Đại học
+                            </h4>
+                            <ul id="result-unis" class="space-y-2 sm:space-y-4 text-sm sm:text-base"></ul>
+                        </div>
+
+                        <div class="h-px w-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+
+                        <div>
+                            <h4 class="flex items-center gap-2 sm:gap-3 text-base sm:text-xl font-semibold text-blue-300 mb-3 sm:mb-5">
+                                <i data-lucide="book-open" class="w-5 h-5 sm:w-6 sm:h-6"></i> Cao đẳng
+                            </h4>
+                            <ul id="result-colleges" class="space-y-2 sm:space-y-4 text-sm sm:text-base"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center pt-6 sm:pt-10 pb-6 sm:pb-10">
+                <button onclick="restartQuiz()" class="group flex items-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-semibold text-sm sm:text-lg transition-all hover:scale-105 active:scale-95">
+                    <i data-lucide="rotate-ccw" class="w-5 h-5 sm:w-6 sm:h-6 group-hover:-rotate-180 transition-transform duration-700"></i>
+                    Làm lại
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "Khi có ngày nghỉ rảnh, bạn ưu tiên làm gì?", options: [
+                { t: "Sửa chữa máy móc, tập thể dục mạnh mẽ.", r: ['R'] },
+                { t: "Đọc sách khoa học, giải câu đố logic.", r: ['I'] },
+                { t: "Vẽ tranh, chơi nhạc, trang trí theo cá tính.", r: ['A'] },
+                { t: "Gặp gỡ bạn bè, tình nguyện xã hội.", r: ['S'] },
+                { t: "Tìm cơ hội kinh doanh, phân tích đầu tư.", r: ['E'] },
+                { t: "Sắp xếp tài liệu, dọn dẹp gọn gàng.", r: ['C'] }
+            ]},
+            { q: "Nội dung nào trên YouTube khiến bạn subscribe?", options: [
+                { t: "DIY, review công nghệ, xe cộ.", r: ['R'] },
+                { t: "Khoa học, vũ trụ, khám phá tự nhiên.", r: ['I'] },
+                { t: "Thiết kế, thời trang, art tutorial.", r: ['A'] },
+                { t: "Kỹ năng sống, câu chuyện cảm hứng.", r: ['S'] },
+                { t: "Kinh doanh, khởi nghiệp, lifestyle.",r: ['E'] },
+                { t: "Excel, Notion, quản lý tài chính.", r: ['C'] }
+            ]},
+            { q: "Môn học nào bạn thích nhất?", options: [
+                { t: "Giáo dục thể chất, công nghệ xưởng.", r: ['R'] },
+                { t: "Toán, Vật lý, Hóa lý thuyết.", r: ['I'] },
+                { t: "Tiếng Anh sáng tạo, Mỹ thuật, Âm nhạc.", r: ['A'] },
+                { t: "Giáo dục công dân, Tâm lý học.", r: ['S'] },
+                { t: "Kinh tế, Quốc phòng lãnh đạo.", r: ['E'] },
+                { t: "Tin học, cơ sở dữ liệu.", r: ['C'] }
+            ]},
+            { q: "Thế mạnh tự nhiên của bạn là gì?", options: [
+                { t: "Khéo tay, mạnh mẽ, linh hoạt.", r: ['R'] },
+                { t: "Suy luận logic, phân tích dữ liệu.", r: ['I'] },
+                { t: "Tưởng tượng, cảm xúc, thẩm mỹ.", r: ['A'] },
+                { t: "Lắng nghe, thấu cảm, mối quan hệ.", r: ['S'] },
+                { t: "Thuyết phục, lãnh đạo, quyết liệt.", r: ['E'] },
+                { t: "Tổ chức, kỷ luật, chính xác.", r: ['C'] }
+            ]},
+            { q: "Bạn mô tả bản thân như thế nào?", options: [
+                { t: "Thực tế, mạnh mẽ, hành động.", r: ['R'] },
+                { t: "Tò mò, sâu sắc, độc lập suy nghĩ.", r: ['I'] },
+                { t: "Tự do, sáng tạo, ghét quy tắc.", r: ['A'] },
+                { t: "Thân thiện, giúp đỡ, tạo hòa bình.", r: ['S'] },
+                { t: "Tự tin, tham vọng, hướng tới thành công.", r: ['E'] },
+                { t: "Cẩn thận, kỷ luật, ngăn nắp.", r: ['C'] }
+            ]},
+            { q: "Thiết bị bị hỏng, bạn làm gì?", options: [
+                { t: "Tự sửa hoặc tìm công cụ.", r: ['R'] },
+                { t: "Tra cứu online hiểu bản chất.", r: ['I'] },
+                { t: "Bỏ qua, dùng cái khác.", r: ['A'] },
+                { t: "Gọi bạn để xin hướng dẫn.", r: ['S'] },
+                { t: "Gọi trung tâm bảo hành.", r: ['E'] },
+                { t: "Tuân theo sách hướng dẫn.", r: ['C'] }
+            ]},
+            { q: "Mâu thuẫn trong nhóm, bạn phản ứng như thế nào?", options: [
+                { t: "Không quan tâm, làm việc của mình.", r: ['R'] },
+                { t: "Phân tích logic tìm ai sai.", r: ['I'] },
+                { t: "Dùng hài hước giảm căng thẳng.", r: ['A'] },
+                { t: "Lắng nghe, thấu cảm, thỏa hiệp.", r: ['S'] },
+                { t: "Phân xử quyết đoán.", r: ['E'] },
+                { t: "Kiểm tra quy tắc ban đầu.", r: ['C'] }
+            ]},
+            { q: "Bạn học hiệu quả nhất qua phương pháp nào?", options: [
+                { t: "Thực hành trực tiếp.", r: ['R'] },
+                { t: "Đọc tài liệu, suy ngẫm.", r: ['I'] },
+                { t: "Hình ảnh, video sinh động.", r: ['A'] },
+                { t: "Thảo luận nhóm, hỏi đáp.", r: ['S'] },
+                { t: "Tìm người giỏi hướng dẫn.", r: ['E'] },
+                { t: "Checklist, lặp lại quy trình.", r: ['C'] }
+            ]},
+            { q: "Môi trường làm việc lý tưởng?", options: [
+                { t: "Ngoài trời, không gian mở.", r: ['R'] },
+                { t: "Yên tĩnh, không xao lạc.", r: ['I'] },
+                { t: "Tự do, không giờ cố định.", r: ['A'] },
+                { t: "Ấm áp, có mọi người.", r: ['S'] },
+                { t: "Chuyên nghiệp, cạnh tranh.", r: ['E'] },
+                { t: "Ổn định, giờ hành chính.", r: ['C'] }
+            ]},
+            { q: "Phong cách ra quyết định?", options: [
+                { t: "Kinh nghiệm thực tế, thử sai.", r: ['R'] },
+                { t: "Dữ liệu, logic khoa học.", r: ['I'] },
+                { t: "Cảm xúc, trực giác, thẩm mỹ.", r: ['A'] },
+                { t: "Ý kiến chung, hài hòa.", r: ['S'] },
+                { t: "Quyết đoán, chấp nhận rủi ro.", r: ['E'] },
+                { t: "Chậm rãi, so sánh an toàn.", r: ['C'] }
+            ]},
+            { q: "Dự án mới hoàn toàn, bạn sẽ:", options: [
+                { t: "Bắt tay làm ngay, thử sai.", r: ['R'] },
+                { t: "Dành 80% thời gian nghiên cứu.", r: ['I'] },
+                { t: "Bắt đầu sáng tạo nháp.", r: ['A'] },
+                { t: "Hỏi kinh nghiệm người đi trước.", r: ['S'] },
+                { t: "Tìm đối tác giỏi cùng làm.", r: ['E'] },
+                { t: "Lập timeline chi tiết phân chia.", r: ['C'] }
+            ]},
+            { q: "Gì thúc đẩy bạn làm việc hăng say?", options: [
+                { t: "Sản phẩm bền bỉ do tay mình.", r: ['R'] },
+                { t: "Khám phá tri thức mới.", r: ['I'] },
+                { t: "Thể hiện cá tính, tác phẩm.", r: ['A'] },
+                { t: "Giúp người khác, xã hội.", r: ['S'] },
+                { t: "Đạt mục tiêu, chiến thắng.", r: ['E'] },
+                { t: "Hoàn thành đúng chuẩn.", r: ['C'] }
+            ]},
+            { q: "Kiểu người bạn ghét làm cùng?", options: [
+                { t: "Nói nhiều không làm.", r: ['R'] },
+                { t: "Cảm tính, không logic.", r: ['I'] },
+                { t: "Cứng nhắc, theo quy tắc cũ.", r: ['A'] },
+                { t: "Ích kỷ, thô lỗ.", r: ['S'] },
+                { t: "Thiếu tham vọng, lề mề.", r: ['E'] },
+                { t: "Bừa bộn, quên deadline.", r: ['C'] }
+            ]},
+            { q: "Muốn được công nhận về điều gì?", options: [
+                { t: "Sản phẩm tay nghề xuất sắc.", r: ['R'] },
+                { t: "Trí tuệ, ý tưởng độc đáo.", r: ['I'] },
+                { t: "Sáng tạo, phong cách độc lạ.", r: ['A'] },
+                { t: "Lòng tốt, đóng góp xã hội.", r: ['S'] },
+                { t: "Quyền lực, thành công lớn.", r: ['E'] },
+                { t: "Đáng tin cậy, chính xác.", r: ['C'] }
+            ]},
+            { q: "Có 1 tỷ để đầu tư, bạn chọn?", options: [
+                { t: "Máy móc sản xuất, nông trại.", r: ['R'] },
+                { t: "Startup công nghệ lõi, biotech.", r: ['I'] },
+                { t: "Studio thiết kế, quán café.", r: ['A'] },
+                { t: "Trường học, quỹ học bổng.", r: ['S'] },
+                { t: "Công ty kinh doanh lớn.", r: ['E'] },
+                { t: "Ngân hàng, trái phiếu an toàn.", r: ['C'] }
+            ]},
+            { q: "Viết cuốn sách, chủ đề?", options: [
+                { t: "Cẩm nang sửa chữa.", r: ['R'] },
+                { t: "Khoa học, AI, vũ trụ.", r: ['I'] },
+                { t: "Tiểu thuyết viễn tưởng, thơ ca.", r: ['A'] },
+                { t: "Tâm lý học, nuôi dạy con.", r: ['S'] },
+                { t: "Kinh doanh triệu đô.", r: ['E'] },
+                { t: "Quản lý tài chính cá nhân.", r: ['C'] }
+            ]},
+            { q: "Lạc trên hoang đảo, xung phong?", options: [
+                { t: "Làm công cụ sống sót, xây lều.", r: ['R'] },
+                { t: "Quan sát, dự báo thời tiết.", r: ['I'] },
+                { t: "Kể chuyện, ca hát, tạo trò chơi.", r: ['A'] },
+                { t: "Chăm sóc người bị thương.", r: ['S'] },
+                { t: "Chỉ huy nhóm, phân công.", r: ['E'] },
+                { t: "Quản lý nước, thức ăn.", r: ['C'] }
+            ]},
+            { q: "Startup mới mở, vị trí hấp dẫn?", options: [
+                { t: "Kỹ sư cốt lõi, lập trình viên.", r: ['R'] },
+                { t: "Nhà thiết kế UI/UX.", r: ['A'] },
+                { t: "Quản lý Nhân sự, Đào tạo.", r: ['S'] },
+                { t: "CEO, Giám đốc Kinh doanh.", r: ['E'] },
+                { t: "Kế toán trưởng, Quản lý Tài chính.", r: ['C'] }
+            ]},
+            { q: "Cuối tuần, tham gia sự kiện nào?", options: [
+                { t: "Triển lãm ô tô, công nghệ.", r: ['R'] },
+                { t: "Hội thảo khoa học, vũ trụ.", r: ['I'] },
+                { t: "Triển lãm nghệ thuật, Fashion.", r: ['A'] },
+                { t: "Gây quỹ từ thiện, lễ hội.", r: ['S'] },
+                { t: "Diễn đàn kinh tế, CEO.", r: ['E'] },
+                { t: "Quản trị rủi ro, tài chính.", r: ['C'] }
+            ]},
+            { q: "Game yêu thích?", options: [
+                { t: "Hành động, bắn súng, đua xe.", r: ['R'] },
+                { t: "Chiến thuật, giải đố logic.", r: ['I'] },
+                { t: "Thế giới mở, xây dựng.", r: ['A'] },
+                { t: "Cộng tác, giúp bạn.", r: ['S'] },
+                { t: "Quản lý, chiến lược, đế chế.", r: ['E'] },
+                { t: "Giải đố nhịp độ.", r: ['C'] }
+            ]},
+            { q: "Hình mẫu người nổi tiếng?", options: [
+                { t: "Elon Musk, nhà sáng chế.", r: ['R'] },
+                { t: "Einstein, nhà khoa học.", r: ['I'] },
+                { t: "Picasso, designer tài ba.", r: ['A'] },
+                { t: "Mẹ Teresa, nhà hoạt động.", r: ['S'] },
+                { t: "Doanh nhân tỷ phú.", r: ['E'] },
+                { t: "Warren Buffett.", r: ['C'] }
+            ]},
+            { q: "Công việc nhàm chán, bạn?", options: [
+                { t: "Tối ưu hóa hoàn thành nhanh.", r: ['R'] },
+                { t: "Tự học lĩnh vực khó hơn.", r: ['I'] },
+                { t: "Nghỉ tìm nơi sáng tạo.", r: ['A'] },
+                { t: "Gắn bó đồng nghiệp.", r: ['S'] },
+                { t: "Đề xuất dự án mới.", r: ['E'] },
+                { t: "Vẫn làm, cần thu nhập.", r: ['C'] }
+            ]},
+            { q: "Mục tiêu lớn nhất?", options: [
+                { t: "Chuyên gia kỹ thuật cấp cao.", r: ['R'] },
+                { t: "Phát minh khoa học mới.", r: ['I'] },
+                { t: "Tác phẩm để đời.", r: ['A'] },
+                { t: "Giúp hàng triệu người.", r: ['S'] },
+                { t: "Đế chế kinh doanh lớn.", r: ['E'] },
+                { t: "Ổn định, lương cao.", r: ['C'] }
+            ]},
+            { q: "Đánh giá nhân viên, yếu tố gì?", options: [
+                { t: "Năng suất, sản phẩm.", r: ['R'] },
+                { t: "Tư duy, chuyên môn.", r: ['I'] },
+                { t: "Sáng tạo, cách làm độc lạ.", r: ['A'] },
+                { t: "Đạo đức, thái độ, hợp tác.", r: ['S'] },
+                { t: "Doanh số, lãnh đạo.", r: ['E'] },
+                { t: "Kỷ luật, tuân thủ quy trình.", r: ['C'] }
+            ]},
+            { q: "Trang phục lý tưởng?", options: [
+                { t: "Jeans, áo thun thoải mái.", r: ['R'] },
+                { t: "Blouse trắng, tối giản.", r: ['I'] },
+                { t: "Tự phối, độc lạ cá nhân.", r: ['A'] },
+                { t: "Lịch sự, thân thiện.", r: ['S'] },
+                { t: "Vest sang trọng, hàng hiệu.", r: ['E'] },
+                { t: "Công sở chỉnh tề.", r: ['C'] }
+            ]},
+            { q: "Từ khóa mô tả bạn?", options: [
+                { t: "Thực tế, mạnh mẽ, kỹ thuật.", r: ['R'] },
+                { t: "Trí tuệ, phân tích, logic.", r: ['I'] },
+                { t: "Tự do, sáng tạo, cảm xúc.", r: ['A'] },
+                { t: "Thân thiện, thấu cảm, giúp.", r: ['S'] },
+                { t: "Tự tin, tham vốn, lãnh đạo.", r: ['E'] },
+                { t: "Cẩn thận, ngăn nắp, kỷ luật.", r: ['C'] }
+            ]},
+            { q: "Bạn bè yêu thích?", options: [
+                { t: "Thực tế, làm việc tay.", r: ['R'] },
+                { t: "Tò mò, thảo luận khoa học.", r: ['I'] },
+                { t: "Sáng tạo, thưởng thức nghệ.", r: ['A'] },
+                { t: "Ổn định, lắng nghe, chân thành.", r: ['S'] },
+                { t: "Tham vốn, nối kết tốt.", r: ['E'] },
+                { t: "Kỷ luật, đáng tin cậy.", r: ['C'] }
+            ]},
+            { q: "Mục đích học tập?", options: [
+                { t: "Kỹ năng sử dụng, hiệu quả.", r: ['R'] },
+                { t: "Bản chất sâu, tri thức mới.", r: ['I'] },
+                { t: "Cá tính độc lạ, phong cách.", r: ['A'] },
+                { t: "Tập thể, xã hội, đạo đức.", r: ['S'] },
+                { t: "Nâng chức, tăng lương.", r: ['E'] },
+                { t: "Bằng cấp, quy định.", r: ['C'] }
+            ]},
+            { q: "Team project, vai trò?", options: [
+                { t: "Làm công việc thực tế, kỹ thuật.", r: ['R'] },
+                { t: "Dữ liệu, phân tích, kế hoạch.", r: ['I'] },
+                { t: "Thiết kế, trình bày, marketing.", r: ['A'] },
+                { t: "Hỗ trợ thành viên, gắn kết.", r: ['S'] },
+                { t: "Chỉ huy, phân công, tiến độ.", r: ['E'] },
+                { t: "Timeline, ghi chú, kiểm tra.", r: ['C'] }
+            ]},
+            { q: "Sẵn sàng xem kết quả?", options: [
+                { t: "Sẵn sàng!", r: [] }
+            ]}
+        ];
+
+        const RESULTS_MAP = {
+            R: {
+                title: "Kỹ thuật - Thực tế (Realistic)",
+                bestMatch: "Kỹ sư / Lập trình viên / Thợ thủ công",
+                related: ["Kiến trúc sư", "Kỹ sư Cơ khí", "Phi công", "Thợ xây dựng"],
+                unis: ["ĐH Bách Khoa", "ĐH Sư phạm Kỹ thuật", "ĐH CNTT (UIT)"],
+                colleges: ["CĐ Kỹ thuật Cao Thắng", "CĐ FPT Polytechnic"],
+                reason: "Bạn là người thực tế, mạnh mẽ với khả năng xử lý vấn đề kỹ thuật xuất sắc. Bạn thích hành động hơn lý thuyết suông."
+            },
+            I: {
+                title: "Nghiên cứu - Khám phá (Investigative)",
+                bestMatch: "Bác sĩ / Nhà khoa học / Chuyên gia Dữ liệu",
+                related: ["Dược sĩ", "Kỹ sư AI", "Nhà phân tích tài chính"],
+                unis: ["ĐH Y Dược", "ĐH Khoa học Tự nhiên", "ĐH Ngoại thương"],
+                colleges: ["CĐ Y tế", "CĐ Công nghệ Sài Gòn"],
+                reason: "Bạn có tư duy phân tích sâu sắc, luôn muốn tìm hiểu bản chất vấn đề. Bạn làm việc độc lập tốt."
+            },
+            A: {
+                title: "Nghệ thuật - Sáng tạo (Artistic)",
+                bestMatch: "Thiết kế Đồ họa / Giám đốc Sáng tạo / Nghệ sĩ",
+                related: ["Đạo diễn", "Nhà thiết kế thời trang", "Content Creator"],
+                unis: ["ĐH Kiến trúc", "ĐH Mỹ thuật", "ĐH RMIT"],
+                colleges: ["Arena Multimedia", "VTC Academy"],
+                reason: "Bạn sở hữu trí tưởng tượng phong phú và ghét sự gò bó. Bạn sinh ra để thể hiện cá tính độc đáo."
+            },
+            S: {
+                title: "Xã hội - Hỗ trợ (Social)",
+                bestMatch: "Giáo viên / Chuyên viên HR / Bác sĩ Tâm lý",
+                related: ["Điều dưỡng", "Chuyên viên PR", "Hướng dẫn viên du lịch"],
+                unis: ["ĐH Sư phạm", "ĐH Khoa học Xã hội", "Học viện Ngoại giao"],
+                colleges: ["CĐ Sư phạm Trung ương", "CĐ Du lịch"],
+                reason: "Bạn có lòng nhân ái, kỹ năng lắng nghe tuyệt vời. Bạn tìm ý nghĩa khi giúp đỡ người khác."
+            },
+            E: {
+                title: "Kinh doanh - Quản lý (Enterprising)",
+                bestMatch: "Giám đốc Kinh doanh / Doanh nhân / Quản lý Sales",
+                related: ["Giám đốc Marketing", "Luật sư thương mại", "Nhà môi giới"],
+                unis: ["ĐH Ngoại thương", "ĐH Kinh tế Quốc dân", "Học viện Ngân hàng"],
+                colleges: ["CĐ Kinh tế Đối ngoại", "CĐ Thương mại"],
+                reason: "Bạn toát ra phong thái lãnh đạo: tự tin, tham vốn, biết thuyết phục. Bạn không ngại mạo hiểm."
+            },
+            C: {
+                title: "Tổ chức - Công vụ (Conventional)",
+                bestMatch: "Kế toán / Kiểm toán viên / Chuyên viên Ngân hàng",
+                related: ["Phân tích dữ liệu", "Quản lý Hành chính", "Logistics"],
+                unis: ["Học viện Tài chính", "ĐH Ngân hàng", "ĐH Thương mại"],
+                colleges: ["CĐ Tài chính Hải quan", "CĐ Kinh tế"],
+                reason: "Bạn là biểu tượng kỷ luật, cẩn thận, chính xác. Bạn xử lý hệ thống và con số tốt."
+            }
+        };
+
+        let currentQuestionIndex = 0;
+        let scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+
+        const screens = {
+            intro: document.getElementById('screen-intro'),
+            quiz: document.getElementById('screen-quiz'),
+            loading: document.getElementById('screen-loading'),
+            result: document.getElementById('screen-result')
+        };
+
+        const quizElements = {
+            progressText: document.getElementById('progress-text'),
+            progressPercentage: document.getElementById('progress-percentage'),
+            progressBar: document.getElementById('progress-bar'),
+            questionText: document.getElementById('question-text'),
+            optionsContainer: document.getElementById('options-container')
+        };
+
+        lucide.createIcons();
+
+        function switchScreen(screenName) {
+            Object.values(screens).forEach(screen => screen.classList.add('hidden-screen'));
+            screens[screenName].classList.remove('hidden-screen');
+            screens[screenName].classList.add('fade-in-up');
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+            switchScreen('quiz');
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const currentQ = questions[currentQuestionIndex];
+            const progressNum = currentQuestionIndex + 1;
+            const totalQ = questions.length;
+            const percent = Math.round((progressNum / totalQ) * 100);
+            
+            quizElements.progressText.textContent = `Câu ${progressNum} / ${totalQ}`;
+            quizElements.progressPercentage.textContent = `${percent}%`;
+            quizElements.progressBar.style.width = `${percent}%`;
+            quizElements.questionText.textContent = currentQ.q;
+
+            quizElements.optionsContainer.innerHTML = '';
+            currentQ.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 sm:p-5 md:p-6 min-h-[50px] sm:min-h-[56px] rounded-lg sm:rounded-2xl glass-panel hover-3d flex items-center justify-between group";
+                btn.innerHTML = `
+                    <span class="text-sm sm:text-base md:text-lg text-slate-200 group-hover:text-white transition-colors pr-4 pointer-events-none">
+                        ${opt.t}
+                    </span>
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white/20 group-hover:border-purple-400 flex items-center justify-center transition-colors shrink-0 pointer-events-none">
+                        <div class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-purple-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </div>
+                `;
+                btn.onclick = () => handleAnswer(opt.r);
+                quizElements.optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(traits) {
+            traits.forEach(trait => {
+                if (scores[trait] !== undefined) scores[trait]++;
+            });
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                quizElements.questionText.style.opacity = 0;
+                quizElements.optionsContainer.style.opacity = 0;
+                setTimeout(() => {
+                    renderQuestion();
+                    quizElements.questionText.style.opacity = 1;
+                    quizElements.optionsContainer.style.opacity = 1;
+                }, 200);
+            } else {
+                processResult();
+            }
+        }
+
+        function processResult() {
+            switchScreen('loading');
+            let maxTrait = 'R';
+            let maxScore = -1;
+            for (const [trait, score] of Object.entries(scores)) {
+                if (score > maxScore) {
+                    maxScore = score;
+                    maxTrait = trait;
+                }
+            }
+            const finalData = RESULTS_MAP[maxTrait];
+            setTimeout(() => {
+                renderResultData(finalData);
+                switchScreen('result');
+                lucide.createIcons();
+            }, 2500);
+        }
+
+        function renderResultData(data) {
+            document.getElementById('result-title').textContent = data.title;
+            document.getElementById('result-best-match').textContent = data.bestMatch;
+            document.getElementById('result-reason').textContent = data.reason;
+
+            const tagsHtml = data.related.map(job => 
+                `<span class="px-3 sm:px-4 py-2 bg-white/10 rounded-lg text-xs sm:text-sm text-slate-200 border border-white/10 hover:bg-white/20 transition-colors">${job}</span>`
+            ).join('');
+            document.getElementById('result-related').innerHTML = tagsHtml;
+
+            const unisHtml = data.unis.map(uni => 
+                `<li class="flex items-start gap-2 sm:gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 sm:w-5 sm:h-5 text-green-400 shrink-0 mt-1 sm:mt-0.5"></i><span class="text-slate-200 text-sm sm:text-lg">${uni}</span></li>`
+            ).join('');
+            document.getElementById('result-unis').innerHTML = unisHtml;
+
+            const colHtml = data.colleges.map(col => 
+                `<li class="flex items-start gap-2 sm:gap-3"><i data-lucide="award" class="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 shrink-0 mt-1 sm:mt-0.5"></i><span class="text-slate-200 text-sm sm:text-lg">${col}</span></li>`
+            ).join('');
+            document.getElementById('result-colleges').innerHTML = colHtml;
+        }
+
+        function restartQuiz() {
+            switchScreen('intro');
+        }
+    </script>
+</body>
+</html>
